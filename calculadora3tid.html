@@ -20,7 +20,7 @@
             <td><button class="botao" onclick="mut('/')"ope>/</button></td>
             <td><button class="botao" onclick="mut('*')"ope>X</button></td>
             <td><button class="botao" onclick="apagar()">D</button></td>
-            <td><button class="botao" onclick="mut()" ope >%</button></td>
+            <td><button class="botao" onclick="mut('%')">%</button></td>
            </tr>
             <tr>
                 <td><button class="botao" onclick="clicar('9')"num>9</button></td>
@@ -38,7 +38,7 @@
                 <td><button class="botao"  onclick="clicar('1')"num>1</button></td>
                 <td><button class="botao"  onclick="clicar('2')"num>2</button></td>
                 <td><button class="botao"  onclick="clicar('3')"num>3</button></td>
-                <td rowspan="2"><button class="botao" style="height: 101px">=</button></td>
+                <td rowspan="2"><button class="botao" onclick="calcular('=')" style="height: 101px">=</button></td>
             </tr>
             <tr>
                 <td colspan="3"><button class="zero" style="width: 150px"  onclick="clicar('0')">0</button></td>
@@ -46,6 +46,7 @@
         </table>
     </div>
 <script>
+    var contt=0;
     var sub;
     var numero;
     function clicar(x)
@@ -57,6 +58,7 @@
     {
         document.getElementById('finalizado').innerHTML = "";
         document.getElementById('maior').innerHTML = "";
+        contar=0;
     }
      function mut(x){
        const size=100
@@ -65,6 +67,17 @@
        document.getElementById('maior').innerHTML = numero + "\n" + sub + "\n" + x;
        document.getElementById('finalizado').innerHTML = " "; 
     }
-    
+   function calcular(x){
+       if (contt==0){
+           var numero = document.getElementById('maior').innerHTML;
+           document.getElementById('maior').innerHTML = numero + sub; 
+           var resultado = document.getElementById('maior').innerHTML;
+           document.getElementById('maior').innerHTML = eval(resultado);
+           contt++
+       }else{
+       alert("Faça um novo calculo!");
+       contt=0;
+       }
+   }
     </script>
     
