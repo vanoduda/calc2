@@ -1,83 +1,188 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
- <meta charset="UTF-8">
- <meta name="viewport" content="width=device-width, inicial-scale=1.0">
- <link rel="stylesheet" type="text/css" href=calculadoracss.css>
- <title>Calculadora</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, inicial-scale=1.0" />
+  <link rel="stylesheet" type="text/css" href="layoutcalculadora.css" />
+  <title>calculadora</title>
 </head>
+
 <body>
-    <div class="tudo"><br>
-        <h1 class="h1">CALCULADORA</h1>     
-    </div>
-    <div class="calculadora">
-        <textarea id="maior"></textarea>
-        <br>
-        <p id="finalizado"></p>
-        <br>
-        <table>
-           <tr>
-            <td><button class="botao" onclick="mut('/')"ope>/</button></td>
-            <td><button class="botao" onclick="mut('*')"ope>X</button></td>
-            <td><button class="botao" onclick="apagar()">D</button></td>
-            <td><button class="botao" onclick="mut('%')">%</button></td>
-           </tr>
-            <tr>
-                <td><button class="botao" onclick="clicar('9')"num>9</button></td>
-                <td><button class="botao" onclick="clicar('8')"num>8</button></td>
-                <td><button class="botao" onclick="clicar('7')"num>7</button></td>
-                <td><button class="botao" onclick="mut('-')" ope>-</button></td>
-            </tr>
-            <tr>
-                <td><button class="botao" onclick="clicar('4')"num>4</button></td>
-                <td><button class="botao" onclick="clicar('5')"num>5</button></td>
-                <td><button class="botao" onclick="clicar('6')"num>6</button></td>
-                <td><button class="botao" onclick="mut('+')" ope>+</button></td>
-            </tr>
-            <tr>
-                <td><button class="botao"  onclick="clicar('1')"num>1</button></td>
-                <td><button class="botao"  onclick="clicar('2')"num>2</button></td>
-                <td><button class="botao"  onclick="clicar('3')"num>3</button></td>
-                <td rowspan="2"><button class="botao" onclick="calcular('=')" style="height: 101px">=</button></td>
-            </tr>
-            <tr>
-                <td colspan="3"><button class="zero" style="width: 150px"  onclick="clicar('0')">0</button></td>
-            </tr>
-        </table>
-    </div>
-<script>
-    var contt=0;
-    var sub;
-    var numero;
-    function clicar(x)
-    {
-       numero = document.getElementById('finalizado').innerHTML;
-       sub = document.getElementById('finalizado').innerHTML = numero + x;
+  <div class="tudo">
+    <h1 class="h1">CALCULADORA</h1>
+  </div>
+  <div class="calculadora">
+    <textarea id="vizualizador" disabled></textarea>
+    <p id="resultado"></p>
+    <table>
+      <tr>
+        <td><button class="botao" onclick="clicarOperador('/')">/</button></td>
+        <td><button class="botao" onclick="clicarOperador('*')">X</button></td>
+        <td><button class="botao" onclick="clicarOperador('%')">%</button></td>
+        <td><button class="botao" onclick="limpar()">AC</button></td>
+      </tr>
+      <tr>
+        <td><button class="botao" onclick="clicar('7')">7</button></td>
+        <td><button class="botao" onclick="clicar('8')">8</button></td>
+        <td><button class="botao" onclick="clicar('9')">9</button></td>
+        <td><button class="botao" onclick="clicarOperador('-')">-</button></td>
+      </tr>
+      <tr>
+        <td><button class="botao" onclick="clicar('4')">4</button></td>
+        <td><button class="botao" onclick="clicar('5')">5</button></td>
+        <td><button class="botao" onclick="clicar('6')">6</button></td>
+        <td><button class="botao" onclick="clicarOperador('+')">+</button></td>
+      </tr>
+      <tr>
+        <td><button class="botao" onclick="clicar('1')">1</button></td>
+        <td><button class="botao" onclick="clicar('2')">2</button></td>
+        <td><button class="botao" onclick="clicar('3')">3</button></td>
+        <td rowspan="2"><button class="botao" style="height: 101px" onclick="clicarOperador('=')">=</button></td>
+      </tr>
+      <tr>
+        <td colspan="2"><button class="botao" style="width: 100px" onclick="clicar('0')">0</button></td>
+        <td><button class="botao" onclick="clicar('.')">.</button></td>
+      </tr>
+    </table>
+  </div>
+  <script>
+    let topo = 0;
+    let topooperador = 0;
+    var digitado;
+    const size = 100;
+    var numOpe = new Array(size);
+    var num = new Array(size);
+
+    //Na função clicar, criamos a variavel numero e digitanto, armzenando os em resultado.
+    //No if esta dizendo que se o valor do topo for maior que size(100) vai dar pilha estourada.
+    function clicar(x) {
+      numero = document.getElementById("resultado").innerHTML;
+      digitado = document.getElementById("resultado").innerHTML = numero + x;
+
+      if (topo < size) {
+        num[topo] = x;
+        topo++;
+      } else {
+        alert("Pilha estourada!");
+      }
     }
-    function apagar()
-    {
-        document.getElementById('finalizado').innerHTML = "";
-        document.getElementById('maior').innerHTML = "";
-        contar=0;
+    //Voce armazenou o vizualizador dentro do operador, 
+    //e quando acontece " operador + digitado + "\n" + x;" ele printa no vizualizador que esta na variavel operador.
+    function clicarOperador(x) {
+      var operador = document.getElementById("vizualizador").innerHTML;
+      document.getElementById("vizualizador").innerHTML = operador + digitado + "\n" + x;
+      if (topooperador < size) {
+        numOpe[topooperador] = x;
+        topooperador++;
+
+        if (x === "=") {
+          igual();
+        }
+      } else {
+        alert("Pilha estourada!");
+      }
+      document.getElementById("resultado").innerHTML = " ";
     }
-     function mut(x){
-       const size=100
-       var num = new Array(size)
-       var numero = document.getElementById('maior').innerHTML;
-       document.getElementById('maior').innerHTML = numero + "\n" + sub + "\n" + x;
-       document.getElementById('finalizado').innerHTML = " "; 
+
+    function limpar() {
+      document.getElementById("resultado").innerHTML = " ";
+      document.getElementById("vizualizador").innerHTML = " ";
     }
-   function calcular(x){
-       if (contt==0){
-           var numero = document.getElementById('maior').innerHTML;
-           document.getElementById('maior').innerHTML = numero + sub; 
-           var resultado = document.getElementById('maior').innerHTML;
-           document.getElementById('maior').innerHTML = eval(resultado);
-           contt++
-       }else{
-       alert("Faça um novo calculo!");
-       contt=0;
-       }
-   }
-    </script>
-    
+
+    function vezes(a, b) {
+      return +a * +b;
+    }
+    function modulo(a) {
+      if (+a > 0) {
+        return a;
+      } else {
+        return -a;
+      }
+      // return a > 0 ? a : -a;
+    }
+    function subtracao(a, b) {
+      return +a - +b;
+    }
+    function adicao(a, b) {
+
+      // mesma coisa que Number(a) + Number(b) -> transforma string para number
+      return +a + +b;
+    }
+    function dividir(a, b) {
+      return +a / +b;
+    }
+    function igual() {
+      operador = document.getElementById("vizualizador").innerHTML;
+
+      const indexOfVezes = [];
+      const indexOfMais = [];
+      const indexOfDividir = [];
+      const indexOfMenos = [];
+      const indexOfModulo = [];
+
+      console.log(num);
+      console.log(numOpe);
+      for (let i = 0; i <= numOpe.length; i += 1) {
+        if (numOpe[i] === "*") {
+          indexOfVezes.push(i);
+        }
+        if (numOpe[i] === "+") {
+          indexOfMais.push(i);
+        }
+        if (numOpe[i] === "-") {
+          indexOfMenos.push(i);
+        }
+        if (numOpe[i] === "/") {
+          indexOfDividir.push(i);
+        }
+        if (numOpe[i] === "%") {
+          indexOfModulo.push(i);
+        }
+      }
+
+      let soma = 0;
+
+      if (indexOfVezes.length > 0) {
+        for (let j = 0; j <= indexOfVezes.length; j += 1) {
+          total = vezes(num[j], num[j + 1]);
+
+          const antesNum = num.slice(0, j);
+          const depoisNum = num.slice(j + 2);
+          num = [...antesNum, total, ...depoisNum];
+
+          const antesOpe = numOpe.slice(0, j);
+          const depoisOpe = numOpe.slice(j + 1);
+
+          numOpe = [...antesOpe, ...depoisOpe];
+
+          console.log(numOpe, num);
+
+          soma = numOpe;
+
+        }
+      }
+
+      if (indexOfMais.length > 0) {
+        for (let j = 0; j <= indexOfMais.length; j += 1) {
+          total = adicao(num[j], num[j + 1]);
+
+          const antesNum = num.slice(0, j);
+          const depoisNum = num.slice(j + 2);
+          num = [...antesNum, total, ...depoisNum];
+
+          const antesOpe = numOpe.slice(0, j);
+          const depoisOpe = numOpe.slice(j + 1);
+
+          numOpe = [...antesOpe, ...depoisOpe];
+          console.log(numOpe, num);
+
+          soma = numOpe;
+        }
+      }
+      console.log(num);
+    }
+  </script>
+</body>
+
+</html>
